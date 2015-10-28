@@ -1,0 +1,12 @@
+# GOAL_POINT
+# POSE[x, y, a]
+# TOLERANCE
+waterworks :
+  pose : [0.55, 0.1, 1.57]
+  tolerance : [9999.0, 9999.0]
+shoerack :
+  pose : [1.45, 0.4, 1.57]
+  tolerance : [9999.0, 9999.0]
+actroid :
+  pose : [1.0, -0.3, 1.57]
+  tolerance : [9999.0, 9999.0]

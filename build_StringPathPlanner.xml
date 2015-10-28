@@ -1,0 +1,42 @@
+<!--
+# -*- Buildfile -*-
+# @file  build_StringPathPlanner.xml
+# @brief RTComponent makefile for "StringPathPlanner component"
+# @date  $Date$
+#
+# $Id$
+ -->
+<project name="StringPathPlanner" default="compile">
+	<property name="source" value="src" />
+	<property name="dest" value="bin" />
+	<property environment="env" />
+
+	<target name="mkdir">
+		<mkdir dir="${dest}" />
+	</target>
+
+	<target name="idlcompile"  depends="mkdir">
+		<exec executable="${java.home}/../jdk1.7.0_79/bin/idlj">
+			<arg line="-td 'src' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -fall 'idl/MobileRobot.idl'"/>
+		</exec>
+		<exec executable="${java.home}/../jdk1.7.0_79/bin/idlj">
+			<arg line="-td 'src' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -fall 'idl/BasicDataType.idl'"/>
+		</exec>
+		<exec executable="${java.home}/../jdk1.7.0_79/bin/idlj">
+			<arg line="-td 'src' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -fall 'idl/ExtendedDataTypes.idl'"/>
+		</exec>
+		<exec executable="${java.home}/../jdk1.7.0_79/bin/idlj">
+			<arg line="-td 'src' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -i 'C:\Users\ogata\Documents\Workspace\StringPathPlanner\idlfile' -fall 'idl/InterfaceDataTypes.idl'"/>
+		</exec>
+	</target>
+
+	<target name="compile" depends="idlcompile">
+		<javac srcdir="${source}" destdir="${dest}">
+			<classpath>
+				<fileset dir="${env.RTM_JAVA_ROOT}/jar">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+</project>

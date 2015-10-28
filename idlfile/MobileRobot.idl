@@ -1,0 +1,118 @@
+
+
+#ifndef MobileRobot_idl
+#define MobileRobot_idl
+
+
+#include "BasicDataType.idl"
+#include "ExtendedDataTypes.idl"
+#include "InterfaceDataTypes.idl"
+
+
+module RTC {
+
+  /*!
+   * @struct OCMap
+   * @brief OccupancyGridMap Data
+   */
+  struct OGMap
+  {
+    /// Time stamp.
+    Time tm;
+    /// OccupancyGridMap Configuration
+    OGMapConfig config;
+    /// OccupancyGridMap Data
+    OGMapTile map;
+  };
+
+  enum RETURN_VALUE {
+    RETVAL_OK,
+    RETVAL_INVALID_PARAMETER,
+    RETVAL_EMPTY_MAP,
+    RETVAL_INVALID_PRECONDITION,
+    RETVAL_NOT_IMPL,
+    RETVAL_UNKNOWN_ERROR,
+	RETVAL_NOT_FOUND,
+
+	//PathFollower
+	RETVAL_EMERGENCY_STOP,
+	RETVAL_CURRENT_POSE_INVALID_VALUE,
+	RETVAL_CURRENT_POSE_TIME_OUT,
+
+	//Localization
+	RETVAL_ODOMETRY_INVALID_VALUE,
+	RETVAL_ODOMETRY_TIME_OUT,
+	RETVAL_RANGE_INVALID_VALUE,
+	RETVAL_RANGE_TIME_OUT
+  };
+
+  enum MAPPER_STATE {
+    MAPPER_STOPPED,
+    MAPPER_MAPPING,
+    MAPPER_SUSPEND,
+    MAPPER_ERROR,
+    MAPPER_UNKNOWN
+  };
+
+  /*!
+   * @interface OGMapper
+   * @brief Occupancy Grid Map Builder Service Interface
+   */
+  interface OGMapper {
+    
+    /// Initialize Current Build Map Data
+    RETURN_VALUE initializeMap(in OGMapConfig config, in Pose2D initialPose);
+
+    RETURN_VALUE startMapping();
+
+    RETURN_VALUE stopMapping();
+
+    RETURN_VALUE suspendMapping();
+
+    RETURN_VALUE resumeMapping();
+
+    RETURN_VALUE getState(out MAPPER_STATE state);
+
+    /// Request Current Build Map Data
+    RETURN_VALUE requestCurrentBuiltMap(out OGMap map);
+  };
+
+  /*!
+   * @interface OGMapServer
+   * @brief Occupancy Grid Map Service Interface
+   */
+  interface OGMapServer {
+    
+    /// Request Current Build Map Data
+    RETURN_VALUE requestCurrentBuiltMap(out OGMap map);
+  };
+  
+  struct PathPlanParameter {
+	//Environmental Map
+	OGMap map;
+    /// Location of the goal.
+    Pose2D targetPose;
+    /// Location of Robot.
+    Pose2D currentPose;
+    /// How far away from the waypoint is considered success (radius in metres).
+    double distanceTolerance;
+    /// How much off the target heading is considered success (in radians).
+    double headingTolerance;
+    /// Target time to arrive at the waypoint by.
+    Time timeLimit;
+    /// Maximum sped to travel at while heading to the waypoint.
+    Velocity2D maxSpeed;
+  };
+  
+  interface PathPlanner {
+    /// Plan Path from PathPlanParater.
+	  RETURN_VALUE planPath(in PathPlanParameter param, out Path2D outPath);
+  };
+
+  interface PathFollower {
+    RETURN_VALUE followPath(in Path2D path);
+  };
+
+};
+
+#endif
